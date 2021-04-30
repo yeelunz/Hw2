@@ -197,3 +197,162 @@ void str_mergesort(char str[][StrLen], int lowwer, int upper)
         str_merge(str, lowwer, mid, upper);
     }
 }
+
+
+//int radix sort
+int int_output[1000001];
+int count[10];
+int getMax(int array[],int n)
+{
+    int max = array[0];
+    for (int i = 1; i < n; i++)
+        if (array[i] > max)
+            max = array[i];
+    return max;
+}
+void int_countingSort(int array[], int size, int place)
+{
+    for (int i = 0; i < 10; ++i)
+        count[i] = 0;
+
+    // Calculate count of elements
+    for (int i = 0; i < size; i++)
+        count[(array[i] / place) % 10]++;
+
+    // Calculate cumulative count
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    // Place the elements in sorted order
+    for (int i = size - 1; i >= 0; i--)
+    {
+        int_output[count[(array[i] / place) % 10] - 1] = array[i];
+        count[(array[i] / place) % 10]--;
+    }
+
+    for (int i = 0; i < size; i++)
+        array[i] = int_output[i];
+}
+void int_radixsort(int array[], int size)
+{
+    // Get maximum element
+    int max = getMax(array, size);
+
+    // Apply counting sort to sort elements based on place value.
+    for (int place = 1; max / place > 0; place *= 10)
+        int_countingSort(array, size, place);
+}
+
+
+//str radix sort
+//strlen=100
+char str_output[1000001][StrLen];
+int str_count[256];
+void str_countingSort(char str[][StrLen], int size, int place)
+{
+    for (int i = 0; i < 256; ++i)
+        str_count[i] = 0;
+
+    // Calculate count of elements
+    for (int i = 0; i < size; i++)
+        str_count[(int)(str[i][place-1])]++;
+
+    // Calculate cumulative count
+    for (int i = 1; i < 256; i++)
+        str_count[i] += str_count[i - 1];
+
+    // Place the elements in sorted order
+    for (int i = size - 1; i >= 0; i--)
+    {
+        strcpy(str_output[str_count[(int)(str[i][place-1])]-1] ,str[i] );
+        str_count[(int)(str[i][place-1])]--;
+    }
+    for (int i = 0; i < size; i++)
+        strcpy(str[i], str_output[i]);
+}
+void str_radixsort(char str[][StrLen], int size)
+{
+    // Apply counting sort to sort elements based on place value.
+    for (int place = 1; place<100; place ++)
+        str_countingSort(str, size, place);
+}
+
+
+//int heapsort
+void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+void int_heapify(int arr[], int n, int i)
+{
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+    if (largest != i)
+    {
+        swap(&arr[i], &arr[largest]);
+        int_heapify(arr, n, largest);
+    }
+}
+void int_heapSort(int arr[], int n)
+{   
+    for (int i = n / 2 - 1; i >= 0; i--)
+        int_heapify(arr, n, i);   
+    for (int i = n - 1; i > 0; i--)
+    {
+        int_heapify(arr, i, 0);
+        swap(&arr[0], &arr[i]);
+    }
+}
+
+
+//str heapsort
+
+
+void str_heapify(char str[][StrLen], int n, int i)
+{
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && strcmp(str[left],str[largest]))
+        largest = left;
+
+    if (right < n && strcmp(str[right],str[largest]))
+        largest = right;
+    if (largest != i)
+    {
+        strswap(str[i], str[largest]);
+        str_heapify(str, n, largest);
+    }
+}
+void str_heapSort(char arr[][StrLen], int n)
+{
+    // Build max heap
+    for (int i = n / 2 - 1; i >= 0; i--)
+        str_heapify(arr, n, i);
+
+    // Heap sort
+    for (int i = n - 1; i > 0; i--)
+    {
+        str_heapify(arr, i, 0);
+        strswap(arr[0], arr[i]);
+        // Heapify root element to get highest element at root again
+        
+    }
+}
+
+
+
+
+
+
+
