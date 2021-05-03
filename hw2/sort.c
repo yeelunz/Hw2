@@ -273,7 +273,7 @@ void str_countingSort(char str[][StrLen], int size, int place)
 void str_radixsort(char str[][StrLen], int size)
 {
     // Apply counting sort to sort elements based on place value.
-    for (int place = 1; place<100; place ++)
+    for (int place = 1; place<99; place ++)
         str_countingSort(str, size, place);
 }
 
